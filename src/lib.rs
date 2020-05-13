@@ -1,133 +1,15 @@
-// impl PixelEngineError {
-//     fn new(kind: &str, message: &str) -> PixelEngineError {
-//         PixelEngineError {
-//             kind: kind.to_string(),
-//             message: message.to_string()
-//         }
-//     }
-
-//     fn default(message: &str) -> PixelEngineError {
-//         PixelEngineError::new("default", message)
-//     }
-// }
-
-// impl fmt::Display for PixelEngineError {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(f,"PixelEngineError[kind={}, message={}]", self.kind, self.message)
-//     }
-// }
-
-// impl Error for PixelEngineError {
-//     fn description(&self) -> &str {
-//         &self.message
-//     }
-// }
-
-// impl From<String> for PixelEngineError {
-//     fn from(err: String) -> Self {
-//         PixelEngineError::default(&err)
-//     }
-// }
-
-// impl From<sdl2::video::WindowBuildError> for PixelEngineError {
-//     fn from(err: sdl2::video::WindowBuildError) -> Self {
-//         let message = format!("{}", err);
-//         PixelEngineError::new("WindowBuildError", &message[..])
-//     }
-// }
-
-// impl From<sdl2::IntegerOrSdlError> for PixelEngineError {
-//     fn from(err: sdl2::IntegerOrSdlError) -> Self {
-//         let message = format!("{}", err);
-//         PixelEngineError::new("WindowBuildError", &message[..])
-//     }
-// }
-
-// type PixelEngineResult<T> = Result<T, PixelEngineError>;
-
-// pub struct PixelEngine {
-//     sdl_context: Box<Sdl>,
-//     event_pump: Box<EventPump>,
-//     canvas: Box<Canvas<Window>>,
-//     pixel_w: u8,
-//     pixel_h: u8,
-// }
-
-// impl PixelEngine {
-
-//     pub fn new(title: &str, screen_w: u32, screen_h: u32, pixel_w: u8, pixel_h: u8) -> PixelEngineResult<Box<PixelEngine>> {
-//         let real_window_h = screen_h * pixel_h as u32;
-//         let real_window_w = screen_w * pixel_w as u32;
-//         let sdl_context = Box::new(sdl2::init()?);
-//         let video_subsystem = Box::new(sdl_context.video()?);
-//         let event_pump = Box::new(sdl_context.event_pump()?);
-//         let window = video_subsystem
-//             .window(title, real_window_w, real_window_h)
-//             .position_centered().opengl().build()?;
-//         let canvas = Box::new(window.into_canvas().build()?);
-//         let engine = PixelEngine { sdl_context, event_pump, canvas, pixel_w, pixel_h };
-//         return Ok(Box::new(engine));
-//     }
-
-//     pub fn get_screen_width(&self) -> i32 {
-//         let (w, _h) = self.canvas.window().size();
-//         return w as i32 / self.pixel_w as i32;
-//     }
-
-//     pub fn get_screen_height(&self) -> i32 {
-//         let (_w, h) = self.canvas.window().size();
-//         return h as i32 / self.pixel_h as i32;
-//     }
-
-//     pub fn set_window_title(&mut self, title: &str) {
-//         self.canvas.window_mut().set_title(title).unwrap();
-//     }
-
-//     pub fn start(&mut self, callback: &mut dyn PixelEngineCallback) -> PixelEngineResult<()> {
-//         let mut timer = self.sdl_context.timer()?;
-//         let mut running = true;
-//         let mut ticks = timer.ticks();
-//         while running {
-//             for event in self.event_pump.poll_iter() {
-//                 match event {
-//                     Event::Quit {..} | Event::KeyDown {keycode: Some(Keycode::Escape), ..} => {
-//                         running = false;
-//                     },
-//                     _ => {}
-//                 }
-//             }
-
-//             ticks = timer.ticks() - ticks;
-//             self.canvas.set_draw_color(Color::RGB(0, 0, 0));
-//             self.canvas.clear();
-//             callback.on_user_update(self, ticks);
-//             self.canvas.present();
-//             std::thread::sleep(Duration::from_millis(100));
-//         }
-//         Ok(())
-//     }
-
-//     pub fn drawn_rgb(&mut self, x: i32, y: i32, r: u8, g: u8, b: u8) {
-//         self.canvas.set_draw_color(Color::RGB(r, g, b));
-//         let real_x = x * self.pixel_w as i32;
-//         let real_y = y * self.pixel_h as i32;
-//         let rect = Rect::new(real_x as i32, real_y as i32, self.pixel_w as u32, self.pixel_h as u32);
-//         self.canvas.fill_rect(rect).unwrap();
-//     }
-// }
-
 #[derive(Debug)]
 pub struct YapeError {
-    kind: String,
-    message: String,
+    pub kind: String,
+    pub message: String,
 }
 
 type YapeResult<T> = Result<T, YapeError>;
 
 pub struct ButtonState {
-    pressed: bool,
-    released: bool,
-    held: bool,
+    pub pressed: bool,
+    pub released: bool,
+    pub held: bool,
 }
 
 pub enum Key {
@@ -140,51 +22,51 @@ pub enum Key {
     Back, Escape, Return, Enter, Pause, Scroll,
 }
 
-enum PixelMode {
+pub enum PixelMode {
     Normal,
     Mask,
     Alpha,
 }
 
 pub struct Pixel {
-    red: u8,
-    green: u8,
-    blue: u8,
-    alpha: u8,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
 }
 
-const BLANK: Pixel = Pixel { red: 0, green: 0, blue: 0, alpha: 0 };
-const BLACK: Pixel = Pixel::rgb(0, 0, 0);
-const BLUE: Pixel = Pixel::rgb(0, 0, 255);
-const CYAN: Pixel = Pixel::rgb(0, 255, 255);
-const DARK_BLUE: Pixel = Pixel::rgb(0, 0, 128);
-const DARK_CYAN: Pixel = Pixel::rgb(0, 128, 128);
-const DARK_GREEN: Pixel = Pixel::rgb(0, 128, 0);
-const DARK_GREY: Pixel = Pixel::rgb(128, 128, 128);
-const DARK_MAGENTA: Pixel = Pixel::rgb(128, 0, 128);
-const DARK_RED: Pixel = Pixel::rgb(128, 0, 0);
-const DARK_YELLOW: Pixel = Pixel::rgb(128, 128, 0);
-const GREEN: Pixel = Pixel::rgb(0, 255, 0);
-const GREY: Pixel = Pixel::rgb(192, 192, 192);
-const MAGENTA: Pixel = Pixel::rgb(255, 0, 255);
-const RED: Pixel = Pixel::rgb(255, 0, 0);
-const VERY_DARK_BLUE: Pixel = Pixel::rgb(0, 0, 64);
-const VERY_DARK_CYAN: Pixel = Pixel::rgb(0, 64, 64);
-const VERY_DARK_GREEN: Pixel = Pixel::rgb(0, 64, 0);
-const VERY_DARK_GREY: Pixel = Pixel::rgb(64, 64, 64);
-const VERY_DARK_MAGENTA: Pixel = Pixel::rgb(64, 0, 64);
-const VERY_DARK_RED: Pixel = Pixel::rgb(64, 0, 0);
-const VERY_DARK_YELLOW: Pixel = Pixel::rgb(64, 64, 0);
-const WHITE: Pixel = Pixel::rgb(255, 255, 255);
-const YELLOW: Pixel = Pixel::rgb(255, 255, 0);
+pub const BLANK: Pixel = Pixel { red: 0, green: 0, blue: 0, alpha: 0 };
+pub const BLACK: Pixel = Pixel { red: 0, green: 0, blue: 0, alpha: 0 };
+pub const BLUE: Pixel = Pixel { red: 0, green: 0, blue: 255, alpha: 0 };
+pub const CYAN: Pixel = Pixel { red: 0, green: 255, blue: 255, alpha: 0 };
+pub const DARK_BLUE: Pixel = Pixel { red: 0, green: 0, blue: 128, alpha: 0 };
+pub const DARK_CYAN: Pixel = Pixel { red: 0, green: 128, blue: 128, alpha: 0 };
+pub const DARK_GREEN: Pixel = Pixel { red: 0, green: 128, blue: 0, alpha: 0 };
+pub const DARK_GREY: Pixel = Pixel { red: 128, green: 128, blue: 128, alpha: 0 };
+pub const DARK_MAGENTA: Pixel = Pixel { red: 128, green: 0, blue: 128, alpha: 0 };
+pub const DARK_RED: Pixel = Pixel { red: 128, green: 0, blue: 0, alpha: 0 };
+pub const DARK_YELLOW: Pixel = Pixel { red: 128, green: 128, blue: 0, alpha: 0 };
+pub const GREEN: Pixel = Pixel { red: 0, green: 255, blue: 0, alpha: 0 };
+pub const GREY: Pixel = Pixel { red: 192, green: 192, blue: 192, alpha: 0 };
+pub const MAGENTA: Pixel = Pixel { red: 255, green: 0, blue: 255, alpha: 0 };
+pub const RED: Pixel = Pixel { red: 255, green: 0, blue: 0, alpha: 0 };
+pub const VERY_DARK_BLUE: Pixel = Pixel { red: 0, green: 0, blue: 64, alpha: 0 };
+pub const VERY_DARK_CYAN: Pixel = Pixel { red: 0, green: 64, blue: 64, alpha: 0 };
+pub const VERY_DARK_GREEN: Pixel = Pixel { red: 0, green: 64, blue: 0, alpha: 0 };
+pub const VERY_DARK_GREY: Pixel = Pixel { red: 64, green: 64, blue: 64, alpha: 0 };
+pub const VERY_DARK_MAGENTA: Pixel = Pixel { red: 64, green: 0, blue: 64, alpha: 0 };
+pub const VERY_DARK_RED: Pixel = Pixel { red: 64, green: 0, blue: 0, alpha: 0 };
+pub const VERY_DARK_YELLOW: Pixel = Pixel { red: 64, green: 64, blue: 0, alpha: 0 };
+pub const WHITE: Pixel = Pixel { red: 255, green: 255, blue: 255, alpha: 0 };
+pub const YELLOW: Pixel = Pixel { red: 255, green: 255, blue: 0, alpha: 0 };
 
 impl Pixel {
     
-    const fn rbga(red: u8, green: u8, blue: u8, alpha: u8) -> Pixel {
+    pub fn rbga(red: u8, green: u8, blue: u8, alpha: u8) -> Pixel {
         Pixel { red, green, blue, alpha }
     }
 
-    const fn rgb(red: u8, green: u8, blue: u8) -> Pixel {
+    pub fn rgb(red: u8, green: u8, blue: u8) -> Pixel {
         Pixel { red, green, blue, alpha: 0, }
     }
 }
@@ -222,11 +104,15 @@ pub trait YapeCallback {
     fn on_terminate(&mut self, engine: &mut dyn YapeEngineApi, time_elapsed: u32) -> YapeResult<()>;
 }
 
-struct YapeEngine {}
+pub struct YapeEngine {}
 
 impl YapeEngine {
-    fn create(screen_width: i32, height: i32, pixel_w: i32, pixel_h: i32) -> YapeEngine {
-        unimplemented!()
+    pub fn construct(screen_width: i32, height: i32, pixel_w: i32, pixel_h: i32) -> YapeEngine {
+        todo!()
+    }
+
+    pub fn start(&mut self, callback: &mut dyn YapeCallback) -> YapeResult<()> {
+        todo!()
     }
 }
 
