@@ -1,22 +1,7 @@
-# Created by .gitignore support plugin (hsz.mobi)
-### Scala template
-*.class
-*.log
 
-# sbt specific
-.cache
-.history
-.lib/
-dist/*
+Cargo.lock
 target/
-lib_managed/
-src_managed/
-project/boot/
-project/plugins/project/
 
-# Scala-IDE specific
-.scala_dependencies
-.worksheet
+# IDE specific
 .idea
-scripts/*.csv
-scripts/*-ubyte
+*.iml
