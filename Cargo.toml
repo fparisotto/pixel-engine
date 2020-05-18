@@ -1,10 +1,14 @@
 [package]
-name = "pixel-engine"
+name = "yape"
 version = "0.1.0"
 authors = ["Fernando Luiz Parisotto <fernando.parisotto@gmail.com>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "A simple pixel engine for game dev and graphics"
+keywords = ["gamedev", "game-engine", "graphics"]
+categories = ["game-engines", "graphics"]
+readme = "README.md"
+repository = "https://github.com/fparisotto/yape/"
+license = "MIT"
 
 [dependencies]
 minifb = "0.16"
