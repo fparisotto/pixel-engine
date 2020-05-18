@@ -1,4 +1,4 @@
-use pixel_engine::{YapeCallback, YapeEngineApi, YapeEngine, YapeResult, Pixel};
+use yape::{YapeCallback, YapeEngineApi, YapeEngine, YapeResult, Pixel};
 use rand::{thread_rng, Rng};
 use rand::rngs::ThreadRng;
 
