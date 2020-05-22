@@ -12,7 +12,7 @@ impl YapeCallback for RandomPixel {
     }
 
     fn on_update(&mut self, engine: &mut dyn YapeEngineApi, _time_elapsed: f32) -> YapeResult<bool> {
-        engine.clear(&pixel_engine::WHITE);
+        engine.clear(&yape::WHITE);
         for x in 0..engine.get_screen_width() {
             for y in 0..engine.get_screen_height() {
                 let pixel = Pixel::from_rgb(self.rng.gen_range(0, 16777215));

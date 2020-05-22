@@ -1,6 +1,7 @@
-use yape::{YapeCallback, YapeEngineApi, YapeEngine, YapeResult, Pixel};
-use rand::{thread_rng, Rng};
+use rand::{Rng, thread_rng};
 use rand::rngs::ThreadRng;
+
+use yape::{KeyboardKey, MouseButton, Pixel, YapeCallback, YapeEngine, YapeEngineApi, YapeResult};
 
 struct MousePixel {
     rng: ThreadRng
@@ -15,19 +16,28 @@ impl YapeCallback for MousePixel {
         if engine.get_mouse_wheel() != 0 {
             println!("wheel={}", engine.get_mouse_wheel());
         }
-        let l = engine.get_mouse_button_state(0);
-        let x = engine.get_mouse_x();
-        let y = engine.get_mouse_y();
-        let pixel = Pixel::from_rgb(self.rng.gen_range(0, 16777215));
-        if l.held {
+        if engine.get_mouse_button_state(&MouseButton::Left).held {
+            // engine.set_pixel_blend(0.5);
+            // engine.set_pixel_mode(PixelMode::Alpha);
+            // engine.draw_pixel(x, y, &yape::GREY);
+            // engine.set_pixel_mode(PixelMode::Normal);
+
+            let x = engine.get_mouse_x();
+            let y = engine.get_mouse_y();
+            let pixel = Pixel::from_rgb(self.rng.gen_range(0, 16777215));
             engine.draw_pixel(x, y, &pixel);
         }
+
+        if engine.get_key_state(&KeyboardKey::Space).pressed {
+            println!("Space bar pressed")
+        }
+
         Ok(true)
     }
 }
 
 fn main() -> YapeResult<()>  {
     let mut example = MousePixel { rng: thread_rng() };
-    let mut engine = YapeEngine::construct("Random", 160, 120, 4, 4)?;
+    let mut engine = YapeEngine::construct("Random", 320, 240, 4, 4)?;
     engine.start(&mut example)
 }
