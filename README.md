@@ -5,4 +5,3 @@ A toy pixel engine, [rust](https://www.rust-lang.org/) port of [olcPixelGameEngi
 # TODO 
 * more docs, examples etc
 * disclaimer for public (use rustyPixelGameEngine instead)
-* license
